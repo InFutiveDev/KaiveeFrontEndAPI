@@ -31,7 +31,7 @@ jobs:
             # ssh -o StrictHostKeyChecking=no root@159.89.168.124 \
             sshpass -p "t*zRKXck6w$4" ssh -o StrictHostKeyChecking=no root@103.68.40.157 \
             "echo checkout to directory && \
-            cd /var/www/html/CityXRayFrontAPI && \
+            cd /var/www/html/KaiveeFrontEndAPI && \
             echo TAKE A LATEST PULL && \
             git checkout main --force && \
             echo checkout successfully! && \
