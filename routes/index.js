@@ -1,0 +1,76 @@
+const express = require("express");
+const router = express.Router();
+
+const userAuth = require("./auth");
+const category = require("./category");
+const test = require("./test");
+const hebit = require("./hebit");
+const user = require("./user");
+const address = require("./address");
+const booking = require("./booking");
+const banner = require("./banner");
+const inquiry = require("./inquiry");
+const coupon = require("./coupon");
+const familymember = require("./familymember");
+const healthRisk = require("./healthRisk");
+const media = require("./media");
+const lab = require("./lab");
+const career = require("./career");
+const covidRoute = require("./covid");
+const contactRoute = require("./contact");
+const cityRoute = require("./city");
+const feedbackRoute = require("./feedback");
+const appointmentRoute = require("./appointment");
+const prescriptionRoute = require("./prescription");
+const membership_cardRoute = require("./membership_card");
+const reasearchRoute = require("./research");
+const biowasteRouter = require("./biowaste");
+const faqRouter = require("./faq");
+const landingRouter = require("./landing");
+const landingSubscriber = require("./landing_subs");
+const teamRouter = require("./team");
+const landingInquiryRouter = require("./landing_inquiry");
+const corporateRouter = require("./corporate");
+const franchiseRouter = require("./franchise");
+const carrerFormRouter = require("./carrerform");
+
+const { auth } = require("../middlewares/auth");
+
+router.get("/", (req, res) => {
+  res.send("v1");
+});
+
+router.use("/user/auth", userAuth);
+router.use("/category", category);
+router.use("/test", test);
+router.use("/hebit", hebit);
+router.use("/userdata", auth, user);
+router.use("/address", address);
+router.use("/booking", auth, booking);
+router.use("/banner", banner);
+router.use("/inquiry", auth, inquiry);
+router.use("/coupon", coupon);
+router.use("/familymember", auth, familymember);
+router.use("/healthRisk", healthRisk);
+router.use("/media", media);
+router.use("/lab-detail", lab);
+router.use("/career", career);
+router.use("/covidData", covidRoute);
+router.use("/contact", contactRoute);
+router.use("/city", cityRoute);
+router.use("/feedback", feedbackRoute);
+router.use("/appointment", auth, appointmentRoute);
+router.use("/upload", auth, prescriptionRoute);
+router.use("/card", membership_cardRoute);
+router.use("/reasearch", auth, reasearchRoute);
+router.use("/biowaste", biowasteRouter);
+router.use("/faq", faqRouter);
+router.use("/landingData", landingRouter);
+router.use("/subscriber", landingSubscriber);
+router.use("/team", teamRouter);
+router.use("/landingInquiry", landingInquiryRouter);
+router.use("/corporate", corporateRouter);
+router.use("/franchise", franchiseRouter);
+router.use("/carrer-form", carrerFormRouter);
+
+module.exports = router;

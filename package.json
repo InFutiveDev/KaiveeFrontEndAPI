@@ -1,0 +1,55 @@
+{
+  "name": "kaiveeFrontApi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "super": "supervisor app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:InFutiveDev/kaiveeFrontApi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/InFutiveDev/kaiveeFrontApi/issues"
+  },
+  "homepage": "",
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.4",
+    "@sentry/node": "^7.92.0",
+    "@sentry/profiling-node": "^1.3.2",
+    "axios": "^1.6.2",
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "crypto-random-string": "^3.3.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^5.3.0",
+    "firebase": "^11.0.2",
+    "firebase-admin": "^13.0.1",
+    "formidable": "^2.1.1",
+    "googleapis": "^144.0.0",
+    "joi": "^17.8.3",
+    "jsonwebtoken": "^9.0.0",
+    "moment": "^2.29.4",
+    "mongoose": "^6.10.0",
+    "mongoose-sequence": "^5.3.1",
+    "multer": "^1.4.5-lts.1",
+    "needle": "^3.2.0",
+    "node-jose": "^2.2.0",
+    "nodemailer": "^6.9.16",
+    "rate-limit-mongo": "^2.3.2",
+    "razorpay": "^2.9.2",
+    "supervisor": "^0.12.0",
+    "underscore": "^1.13.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
