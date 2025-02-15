@@ -35,7 +35,7 @@ const addBooking = async (req, res) => {
       paymentAmount,
       lab_id,
       collectionType,
-      couponId,
+      couponId = "",
       memberId,
       paymentType,
       timeslot,
@@ -45,7 +45,7 @@ const addBooking = async (req, res) => {
     // console.log(testId);
     // console.log(testId);
     const qry = {};
-    if (couponId) {
+    if (couponId && couponId.trim() !== "") {
       qry["$or"] = [{ coupon_code: { $regex: couponId, $options: "i" } }];
     }
     const GetcouponId = await couponModel.aggregate([
@@ -59,7 +59,7 @@ const addBooking = async (req, res) => {
       },
     ]);
 
-    if (GetcouponId.length == 0) {
+    if (GetcouponId.length === 0 && couponId.trim() !== "") {
       const obj = {
         res,
         status: Constant.STATUS_CODE.BAD_REQUEST,
@@ -169,7 +169,7 @@ const addBooking = async (req, res) => {
     // const labData = await labModel.findOne({
     //   _id: mongoose.Types.ObjectId(lab_id),
     // });
-    // const lab_name = labData.branch_Name ? labData.branch_Name : null;
+    // const lab_name = labData.branch_Name;
 
     const memberData = await familyModel.findOne({
       _id: mongoose.Types.ObjectId(memberId),
@@ -191,7 +191,7 @@ const addBooking = async (req, res) => {
       testId: testDetails,
       lab_id: lab_id || null,
       paymentAmount,
-      couponId: GetcouponId[0]._id,
+      couponId: GetcouponId[0]?._id ?? null,
       collectionType,
       timeslot,
       paymentType,
@@ -286,7 +286,9 @@ const addBooking = async (req, res) => {
                        <tr>
                           <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
                              <h4>Lab Name</h4>
-                             <p>City X-Ray</p>
+
+                             <p>City Imaging</p>
+
                           </td>
                           <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
                              <h4>Payment Status</h4>
@@ -331,6 +333,7 @@ const addBooking = async (req, res) => {
                      </tr>
    
    
+   
          <tr>
                         <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
                      </tr>
@@ -339,7 +342,7 @@ const addBooking = async (req, res) => {
                         <td colspan="3" style="font-size:13px;color:#333333" width="590">
                        <tr style="text-align: center;">
                           <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                             <h4>Payment Status</h4>
+                             <h4>Payment Mode</h4>
                              <p>${paymentType}</p>
                           </td>
                           <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
@@ -354,7 +357,7 @@ const addBooking = async (req, res) => {
                      </tr>
                      <tr style="text-align: center;">
                         <td colspan="3" height="20" width="100%"><span height="1" width="1">
-                        <b>Important : </b> Once the test reports are generated, Please send to Cityxrayclinic.com</td>
+                        <b>Important : </b> Once the test reports are generated, Please send to https://www.cityimaging.in/</td>
                      </tr>
                      
                      <tr>
@@ -370,7 +373,7 @@ const addBooking = async (req, res) => {
    `;
 
     sendEmail({
-      subject: `CXR (Order Booking) Booking ID: ${orderId}`,
+      subject: `CICL (Order Booking) Booking ID: ${orderId}`,
       html: htmlTemplate.replace(/{{([^}]+)}}/g, (match, key) => data[key]),
       to: process.env.TOMAIL,
       cc: process.env.CC,
