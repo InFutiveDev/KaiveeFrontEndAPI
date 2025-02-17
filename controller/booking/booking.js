@@ -35,7 +35,7 @@ const addBooking = async (req, res) => {
       paymentAmount,
       lab_id,
       collectionType,
-      couponId = "",
+      couponId,
       memberId,
       paymentType,
       timeslot,
@@ -45,7 +45,7 @@ const addBooking = async (req, res) => {
     // console.log(testId);
     // console.log(testId);
     const qry = {};
-    if (couponId && couponId.trim() !== "") {
+    if (couponId) {
       qry["$or"] = [{ coupon_code: { $regex: couponId, $options: "i" } }];
     }
     const GetcouponId = await couponModel.aggregate([
@@ -59,7 +59,7 @@ const addBooking = async (req, res) => {
       },
     ]);
 
-    if (GetcouponId.length === 0 && couponId.trim() !== "") {
+    if (GetcouponId.length == 0) {
       const obj = {
         res,
         status: Constant.STATUS_CODE.BAD_REQUEST,
@@ -191,7 +191,7 @@ const addBooking = async (req, res) => {
       testId: testDetails,
       lab_id: lab_id || null,
       paymentAmount,
-      couponId: GetcouponId[0]?._id ?? null,
+      couponId: GetcouponId[0]._id,
       collectionType,
       timeslot,
       paymentType,
