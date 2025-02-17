@@ -44,6 +44,7 @@ const addBooking = async (req, res) => {
     var testDetails = [];
     // console.log(testId);
     // console.log(testId);
+    console.log("Received couponId:", couponId); 
     const qry = {};
     if (couponId) {
       qry["$or"] = [{ coupon_code: { $regex: couponId, $options: "i" } }];
@@ -138,182 +139,182 @@ const addBooking = async (req, res) => {
     const orderId = saveBooking.id;
     const bookingtime = saveBooking.createdAt;
 
-    let smsPayload = {
-      message: `Dear ${username}, we have received your test request for Order ID: ${orderId}. Our Team will contact you shortly. Amount payable is Rs. ${paymentAmount}. Thank you for choosing City X-Ray & Scan Clinic`,
-      mobile: mobileuser,
-    };
-    sendMsg(smsPayload);
+    // let smsPayload = {
+    //   message: `Dear ${username}, we have received your test request for Order ID: ${orderId}. Our Team will contact you shortly. Amount payable is Rs. ${paymentAmount}. Thank you for choosing City X-Ray & Scan Clinic`,
+    //   mobile: mobileuser,
+    // };
+    // sendMsg(smsPayload);
 
-    const htmlTemplate = `<!DOCTYPE html>
-   <html>
-      <head>
-         <meta http-equiv="content-type" content="text/html; charset=windows-1252">
-      </head>
-      <style>
-         p {
-         margin: 11px;
-         }
-         h4 {
-         font-size: 18px;
-         margin: 10px 0px;
-         }
-      </style>
-      <body>
-         <table style="border:10px solid #DD861F;" align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="650">
-            <tbody>
-               <tr>
-                  <td align="left" valign="top"><table style="border-bottom:1px solid #cccccc; border="0" cellpadding="0" cellspacing="0" width="650">
-            <tbody>
-               <tr>
-                  <td style="padding: 0px 20px;background-color: #fcc42c;" align="left" valign="middle" width="275">
-                     <h2>Booking ID : ${orderId}</h2>
-                  </td>
-               </tr>
-            </tbody>
-         </table>
-         </td>
-         </tr>
-         <tr>
-            <td align="left" valign="top">
-               <table border="0" cellpadding="0" cellspacing="0" width="650">
-                  <tbody>
-                     <tr>
-                        <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
-                     </tr>
-                     <tr>
+  //   const htmlTemplate = `<!DOCTYPE html>
+  //  <html>
+  //     <head>
+  //        <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+  //     </head>
+  //     <style>
+  //        p {
+  //        margin: 11px;
+  //        }
+  //        h4 {
+  //        font-size: 18px;
+  //        margin: 10px 0px;
+  //        }
+  //     </style>
+  //     <body>
+  //        <table style="border:10px solid #DD861F;" align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="650">
+  //           <tbody>
+  //              <tr>
+  //                 <td align="left" valign="top"><table style="border-bottom:1px solid #cccccc; border="0" cellpadding="0" cellspacing="0" width="650">
+  //           <tbody>
+  //              <tr>
+  //                 <td style="padding: 0px 20px;background-color: #fcc42c;" align="left" valign="middle" width="275">
+  //                    <h2>Booking ID : ${orderId}</h2>
+  //                 </td>
+  //              </tr>
+  //           </tbody>
+  //        </table>
+  //        </td>
+  //        </tr>
+  //        <tr>
+  //           <td align="left" valign="top">
+  //              <table border="0" cellpadding="0" cellspacing="0" width="650">
+  //                 <tbody>
+  //                    <tr>
+  //                       <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
+  //                    </tr>
+  //                    <tr>
                         
-                        <td colspan="3" style="font-size:13px;color:#333333" width="590">
-                       <tr>
-                          <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                             <h4>Customer Name(s)</h4>
-                             <p>${membername} (${age}/${gender})</p>
-                          </td>
-                          <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                             <h4>Phone</h4>
-                             <p>${mobileuser}</p>
-                          </td>
-                       </tr>
+  //                       <td colspan="3" style="font-size:13px;color:#333333" width="590">
+  //                      <tr>
+  //                         <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
+  //                            <h4>Customer Name(s)</h4>
+  //                            <p>${membername} (${age}/${gender})</p>
+  //                         </td>
+  //                         <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
+  //                            <h4>Phone</h4>
+  //                            <p>${mobileuser}</p>
+  //                         </td>
+  //                      </tr>
 
-                       <tr>
-                       <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
-                    </tr>
-                    <tr>
+  //                      <tr>
+  //                      <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
+  //                   </tr>
+  //                   <tr>
                        
-                       <td colspan="3" style="font-size:13px;color:#333333" width="590">
-                      <tr>
-                         <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                            <h4>Order date</h4>
-                            <p>${bookingtime}</p>
-                         </td>
-                         <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                            <h4>Patient Address</h4>
-                            <p>${
-                              addressename +
-                              "," +
-                              locality +
-                              "," +
-                              city1 +
-                              "," +
-                              state1 +
-                              "," +
-                              pin
-                            }</p>
-                         </td>
-                      </tr>
+  //                      <td colspan="3" style="font-size:13px;color:#333333" width="590">
+  //                     <tr>
+  //                        <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
+  //                           <h4>Order date</h4>
+  //                           <p>${bookingtime}</p>
+  //                        </td>
+  //                        <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
+  //                           <h4>Patient Address</h4>
+  //                           <p>${
+  //                             addressename +
+  //                             "," +
+  //                             locality +
+  //                             "," +
+  //                             city1 +
+  //                             "," +
+  //                             state1 +
+  //                             "," +
+  //                             pin
+  //                           }</p>
+  //                        </td>
+  //                     </tr>
 
-                       <tr>
-                          <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                             <h4>Lab Name</h4>
-                             <p>City X-Ray</p>
-                          </td>
-                          <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                             <h4>Payment Status</h4>
-                             <p>${saveBooking.is_paid}</p>
-                          </td>
-                       </tr>
-                       </td>
+  //                      <tr>
+  //                         <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
+  //                            <h4>Lab Name</h4>
+  //                            <p>City X-Ray</p>
+  //                         </td>
+  //                         <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
+  //                            <h4>Payment Status</h4>
+  //                            <p>${saveBooking.is_paid}</p>
+  //                         </td>
+  //                      </tr>
+  //                      </td>
                        
-                     </tr>
+  //                    </tr>
 
                      
 
-                     <tr>
-                        <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
-                     </tr>
-                     <tr>
-            <td height="30" width="33%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;"><b>Test Name</b> </td>
-            <td height="30" width="20%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;"><b>Date Of Visit</b></td>
-            <td height="30" width="20%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;"><b>Time Slot</b></td>
+  //                    <tr>
+  //                       <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
+  //                    </tr>
+  //                    <tr>
+  //           <td height="30" width="33%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;"><b>Test Name</b> </td>
+  //           <td height="30" width="20%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;"><b>Date Of Visit</b></td>
+  //           <td height="30" width="20%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;"><b>Time Slot</b></td>
                     
-                     </tr>
+  //                    </tr>
 
                      
    
-                     <tr>
-            <td height="30" width="33%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;">${testDetails.map(
-              (test, index) => ` ${index + 1}: ${test.test_name}\n`
-            )}</td>
-            <td height="30" width="20%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;">${sampleCollectionDateTime}</td>
-            <td height="30" width="20%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;">${timeslot}</td>   
+  //                    <tr>
+  //           <td height="30" width="33%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;">${testDetails.map(
+  //             (test, index) => ` ${index + 1}: ${test.test_name}\n`
+  //           )}</td>
+  //           <td height="30" width="20%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;">${sampleCollectionDateTime}</td>
+  //           <td height="30" width="20%" style="padding: 0px 10px;background-color: #fcc42c;border: solid #fff;">${timeslot}</td>   
                    
-                     </tr>
+  //                    </tr>
 
-                     <tr>
-                        <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
-                     </tr>
-   <tr>
-                        <td colspan="3" style="padding: 10px; background-color: #fcc42c; border: solid #fff; text-align: center;">
-                           <h4>Collection Type</h4>
-                           <p>${collectionType}</p>
-                        </td>
-                     </tr>
+  //                    <tr>
+  //                       <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
+  //                    </tr>
+  //  <tr>
+  //                       <td colspan="3" style="padding: 10px; background-color: #fcc42c; border: solid #fff; text-align: center;">
+  //                          <h4>Collection Type</h4>
+  //                          <p>${collectionType}</p>
+  //                       </td>
+  //                    </tr>
    
    
-         <tr>
-                        <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
-                     </tr>
-                     <tr >
+  //        <tr>
+  //                       <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
+  //                    </tr>
+  //                    <tr >
                         
-                        <td colspan="3" style="font-size:13px;color:#333333" width="590">
-                       <tr style="text-align: center;">
-                          <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                             <h4>Payment Status</h4>
-                             <p>${paymentType}</p>
-                          </td>
-                          <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                             <h4>Amount to be Collected</h4>
-                             <p>${paymentAmount}</p>
-                          </td>
-                       </tr>
-                       </td>
-                     </tr>
-         <tr>
-                        <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
-                     </tr>
-                     <tr style="text-align: center;">
-                        <td colspan="3" height="20" width="100%"><span height="1" width="1">
-                        <b>Important : </b> Once the test reports are generated, Please send to Cityxrayclinic.com</td>
-                     </tr>
+  //                       <td colspan="3" style="font-size:13px;color:#333333" width="590">
+  //                      <tr style="text-align: center;">
+  //                         <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
+  //                            <h4>Payment Status</h4>
+  //                            <p>${paymentType}</p>
+  //                         </td>
+  //                         <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
+  //                            <h4>Amount to be Collected</h4>
+  //                            <p>${paymentAmount}</p>
+  //                         </td>
+  //                      </tr>
+  //                      </td>
+  //                    </tr>
+  //        <tr>
+  //                       <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
+  //                    </tr>
+  //                    <tr style="text-align: center;">
+  //                       <td colspan="3" height="20" width="100%"><span height="1" width="1">
+  //                       <b>Important : </b> Once the test reports are generated, Please send to Cityxrayclinic.com</td>
+  //                    </tr>
                      
-                     <tr>
-                        <td colspan="3" height="30" width="100%"><span height="1" width="1"></td>
-                     </tr>
-                  </tbody>
-               </table>
-            </td>
-         </tr>
-         </tbody></table>
-      </body>
-   </html>
-   `;
+  //                    <tr>
+  //                       <td colspan="3" height="30" width="100%"><span height="1" width="1"></td>
+  //                    </tr>
+  //                 </tbody>
+  //              </table>
+  //           </td>
+  //        </tr>
+  //        </tbody></table>
+  //     </body>
+  //  </html>
+  //  `;
 
-    sendEmail({
-      subject: `CXR (Order Booking) Booking ID: ${orderId}`,
-      html: htmlTemplate.replace(/{{([^}]+)}}/g, (match, key) => data[key]),
-      to: process.env.TOMAIL,
-      cc: process.env.CC,
-      from: process.env.EMAIL,
-    });
+  //   sendEmail({
+  //     subject: `Kaivee (Order Booking) Booking ID: ${orderId}`,
+  //     html: htmlTemplate.replace(/{{([^}]+)}}/g, (match, key) => data[key]),
+  //     to: "infutivedevloper@2gmail.com",
+      
+  //     from: "vik18nov@gmail.com",
+  //   });
     if (saveBooking.paymentType === "online_hdfc") {
       // HDFC Payment Gateway Please do not Remove this Code
       let memberData = await familyModel.findOne({ _id: memberId });
