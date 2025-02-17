@@ -89,69 +89,7 @@ const addBooking = async (req, res) => {
       });
     }
 
-    // do not delete this code
-    // let discountAmount = 0;
-    // if (couponId) {
-    //   const couponData = await couponModel.findOne({ coupon_code: couponId });
-    //   if (!couponData) {
-    //     const obj = {
-    //       res,
-    //       status: Constant.STATUS_CODE.BAD_REQUEST,
-    //       msg: Constant.ERROR_MSGS.INVALID_COUPON_CODE,
-    //     };
-    //     return Response.error(obj);
-    //   }
-    //   //console.log('Hello',couponData);
-    //   if (new Date() > couponData.validity) {
-    //     const obj = {
-    //       res,
-    //       status: Constant.STATUS_CODE.BAD_REQUEST,
-    //       msg: Constant.ERROR_MSGS.COUPON_EXPIRED,
-    //     };
-    //     return Response.error(obj);
-    //   }
-    //   if (totalDbAmount < couponData.minimum_amount) {
-    //     const obj = {
-    //       res,
-    //       status: Constant.STATUS_CODE.BAD_REQUEST,
-    //       msg: Constant.ERROR_MSGS.LESS_AMOUNT + " " + couponData.minimum_amount,
-    //     };
-    //     return Response.error(obj);
-    //   }
-    //   if (couponData.discount_type === "percent-discount") {
-    //     discountAmount = totalDbAmount * (couponData.discount / 100);
-    //     if (discountAmount > couponData.max_value) {
-    //       discountAmount = couponData.max_value
-    //     }
-    //     discountAmount = discountAmount;
-    //   }
-    //   if (couponData.discount_type === "flat-discount") {
-    //     discountAmount = couponData.discount
-    //   }
-    //   let afterDiscount = totalDbAmount - discountAmount;
-    //   console.log('afterDiscount',afterDiscount)
-    //   console.log('paymentAmount',paymentAmount)
-    //   if (afterDiscount != paymentAmount) {
-    //     const obj = {
-    //       res,
-    //       status: Constant.STATUS_CODE.BAD_REQUEST,
-    //       msg: Constant.ERROR_MSGS.AMOUNT_MISMATCH,
-    //     };
-    //     return Response.error(obj);
-    //   }
-
-    // } else {
-    //   if (totalDbAmount != paymentAmount) {
-    //     const obj = {
-    //       res,
-    //       status: Constant.STATUS_CODE.BAD_REQUEST,
-    //       msg: Constant.ERROR_MSGS.AMOUNT_MISMATCH,
-    //     };
-    //     return Response.error(obj);
-    //   }
-    // }
-
-    // console.log("testDetails--->", testDetails);
+   
     const user = await userModel.findOne({ _id: userId });
     const username = user.name;
     const useremail = user.email.id;
@@ -169,7 +107,7 @@ const addBooking = async (req, res) => {
     // const labData = await labModel.findOne({
     //   _id: mongoose.Types.ObjectId(lab_id),
     // });
-    // const lab_name = labData.branch_Name;
+    // const lab_name = labData.branch_Name ? labData.branch_Name : null;
 
     const memberData = await familyModel.findOne({
       _id: mongoose.Types.ObjectId(memberId),
@@ -286,9 +224,7 @@ const addBooking = async (req, res) => {
                        <tr>
                           <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
                              <h4>Lab Name</h4>
-
-                             <p>City Imaging</p>
-
+                             <p>City X-Ray</p>
                           </td>
                           <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
                              <h4>Payment Status</h4>
@@ -333,7 +269,6 @@ const addBooking = async (req, res) => {
                      </tr>
    
    
-   
          <tr>
                         <td colspan="3" height="20" width="100%"><span height="1" width="1"></td>
                      </tr>
@@ -342,7 +277,7 @@ const addBooking = async (req, res) => {
                         <td colspan="3" style="font-size:13px;color:#333333" width="590">
                        <tr style="text-align: center;">
                           <td width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
-                             <h4>Payment Mode</h4>
+                             <h4>Payment Status</h4>
                              <p>${paymentType}</p>
                           </td>
                           <td colspan="2" width="50%" style="padding: 0px 10px;background-color: #fcc42c;     border: solid #fff;">
@@ -357,7 +292,7 @@ const addBooking = async (req, res) => {
                      </tr>
                      <tr style="text-align: center;">
                         <td colspan="3" height="20" width="100%"><span height="1" width="1">
-                        <b>Important : </b> Once the test reports are generated, Please send to https://www.cityimaging.in/</td>
+                        <b>Important : </b> Once the test reports are generated, Please send to Cityxrayclinic.com</td>
                      </tr>
                      
                      <tr>
@@ -373,7 +308,7 @@ const addBooking = async (req, res) => {
    `;
 
     sendEmail({
-      subject: `CICL (Order Booking) Booking ID: ${orderId}`,
+      subject: `CXR (Order Booking) Booking ID: ${orderId}`,
       html: htmlTemplate.replace(/{{([^}]+)}}/g, (match, key) => data[key]),
       to: process.env.TOMAIL,
       cc: process.env.CC,
