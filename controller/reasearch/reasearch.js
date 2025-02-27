@@ -153,107 +153,107 @@ const addReasearchform = async (req, res) => {
       mobile_number,
       write_up,
     });
-    const htmlTemplate = `
-       <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
-    <style>
-      /* Styling for email */
-      body {
-        font-family: Arial, sans-serif;
-        font-size: 13px;
-        color: #333333;
-        margin: 0;
-        padding: 0;
-      }
-      a {
-        color: #DD861F;
-        text-decoration: none;
-      }
-      img {
-        display: block;
-        width: 100px;
-        height: auto;
-      }
-      table {
-        border-spacing: 0;
-        border-collapse: collapse;
-      }
-    </style>
-  </head>
-  <body>
-    <table
-      style="border: 10px solid #DD861F; width: 650px; margin: 0 auto;"
-      bgcolor="#ffffff"
-      cellpadding="0"
-      cellspacing="0"
-    >
-      <tbody>
-        <!-- Header Section -->
-        <tr>
-          <td>
-            <table style="border-bottom: 1px solid #cccccc; width: 100%;" cellpadding="10" cellspacing="0">
-              <tbody>
-                <tr>
-                  <td style="background-color: #fcc42c;" align="left">
-                    <img
-                    src="https://www.cityxrayclinic.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FappLogo.e921700e.png&w=750&q=100"
-                    alt="City X-Ray Clinic"
-                      width="100px"
-                      height="100"
-                      style="width: 100px; height: 40px; max-width: 100px; max-height: 100px;"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
+//     const htmlTemplate = `
+//        <!DOCTYPE html>
+// <html>
+//   <head>
+//     <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+//     <style>
+//       /* Styling for email */
+//       body {
+//         font-family: Arial, sans-serif;
+//         font-size: 13px;
+//         color: #333333;
+//         margin: 0;
+//         padding: 0;
+//       }
+//       a {
+//         color: #DD861F;
+//         text-decoration: none;
+//       }
+//       img {
+//         display: block;
+//         width: 100px;
+//         height: auto;
+//       }
+//       table {
+//         border-spacing: 0;
+//         border-collapse: collapse;
+//       }
+//     </style>
+//   </head>
+//   <body>
+//     <table
+//       style="border: 10px solid #DD861F; width: 650px; margin: 0 auto;"
+//       bgcolor="#ffffff"
+//       cellpadding="0"
+//       cellspacing="0"
+//     >
+//       <tbody>
+//         <!-- Header Section -->
+//         <tr>
+//           <td>
+//             <table style="border-bottom: 1px solid #cccccc; width: 100%;" cellpadding="10" cellspacing="0">
+//               <tbody>
+//                 <tr>
+//                   <td style="background-color: #fcc42c;" align="left">
+//                     <img
+//                     src="https://www.cityxrayclinic.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FappLogo.e921700e.png&w=750&q=100"
+//                     alt="City X-Ray Clinic"
+//                       width="100px"
+//                       height="100"
+//                       style="width: 100px; height: 40px; max-width: 100px; max-height: 100px;"
+//                     />
+//                   </td>
+//                 </tr>
+//               </tbody>
+//             </table>
+//           </td>
+//         </tr>
 
-        <!-- Body Section -->
-        <tr>
-          <td>
-            <table style="width: 100%;" cellpadding="0" cellspacing="0">
-              <tbody>
-                <tr>
-                  <td style="padding: 20px;">
-                    <p style="font-size: 18px; color: #DD861F; font-weight: bold;">
-                      Thanks for Submitting Your Enquiry With Us.
-                    </p>
-                    <p>We will get back to you soon.</p>
-                    <p><b>Name:</b> ${your_name}</p>
-                    <p><b>Email:</b> ${email}</p>
-                    <p><b>Phone Number:</b> ${mobile_number}</p>
-                    <p><b>Message:</b> ${write_up}</p>
-                    <p>
-                      For any enquiry, call us on
-                      <a href="tel:011-4725-2000">+91-011-4725-2000</a>
-                    </p>
-                    <p><b>Thank you,</b></p>
-                    <p><b>City X-Ray & Scan Clinic Pvt Ltd</b></p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </body>
-</html>
-        `;
+//         <!-- Body Section -->
+//         <tr>
+//           <td>
+//             <table style="width: 100%;" cellpadding="0" cellspacing="0">
+//               <tbody>
+//                 <tr>
+//                   <td style="padding: 20px;">
+//                     <p style="font-size: 18px; color: #DD861F; font-weight: bold;">
+//                       Thanks for Submitting Your Enquiry With Us.
+//                     </p>
+//                     <p>We will get back to you soon.</p>
+//                     <p><b>Name:</b> ${your_name}</p>
+//                     <p><b>Email:</b> ${email}</p>
+//                     <p><b>Phone Number:</b> ${mobile_number}</p>
+//                     <p><b>Message:</b> ${write_up}</p>
+//                     <p>
+//                       For any enquiry, call us on
+//                       <a href="tel:011-4725-2000">+91-011-4725-2000</a>
+//                     </p>
+//                     <p><b>Thank you,</b></p>
+//                     <p><b>City X-Ray & Scan Clinic Pvt Ltd</b></p>
+//                   </td>
+//                 </tr>
+//               </tbody>
+//             </table>
+//           </td>
+//         </tr>
+//       </tbody>
+//     </table>
+//   </body>
+// </html>
+//         `;
 
-    sendEmail({
-      subject: `CXR Enquiry(Clinical Research & Trials)-${mobile_number}`,
-      html: htmlTemplate.replace(/{{([^}]+)}}/g, (match, key) => data[key]),
-      to: [
-        "draakaar@cityxrayclinic.com",
-        "rnd@cityimaging.in",
-        "rnd@cityxrayclinic.com",
-      ],
-      from: process.env.EMAIL,
-    });
+//     sendEmail({
+//       subject: `CXR Enquiry(Clinical Research & Trials)-${mobile_number}`,
+//       html: htmlTemplate.replace(/{{([^}]+)}}/g, (match, key) => data[key]),
+//       to: [
+//         "draakaar@cityxrayclinic.com",
+//         "rnd@cityimaging.in",
+//         "rnd@cityxrayclinic.com",
+//       ],
+//       from: process.env.EMAIL,
+//     });
     if (!reaserchData) {
       const obj = {
         res,
