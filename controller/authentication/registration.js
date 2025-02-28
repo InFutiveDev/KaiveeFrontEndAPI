@@ -130,13 +130,12 @@ const sendOtp = async (req, res) => {
     // console.log("OtpCode---->", OtpCode);
 
      // SMS Send
-      let smsPayload = {
-        // message: `${OtpCode} is the OTP to login to your health account. Please enter the OTP to verify your mobile number. Wish you a Healthy Life. City X-Ray and Scan Clinic`,
-        message: `${OtpCode} is the OTP to login to your health account. Please enter the OTP to verify your mobile number. City X-Ray and Scan Clinic`,
-        //template_id: OTP_DLT_TEMPLATE_ID,
-        mobile
-      };
-     sendMsg(smsPayload);
+    //   let smsPayload = {
+    //     message: `${OtpCode} is the OTP to login to your health account. Please enter the OTP to verify your mobile number. City X-Ray and Scan Clinic`,
+       
+    //     mobile
+    //   };
+    //  sendMsg(smsPayload);
 
     const saveOtp = await otpModel.create({
       mobile: mobile,
