@@ -48,7 +48,7 @@ router.use("/userdata", auth, user);
 router.use("/address", address);
 router.use("/booking", auth, booking);
 router.use("/banner", banner);
-router.use("/inquiry", auth, inquiry);
+router.use("/inquiry", inquiry);
 router.use("/coupon", coupon);
 router.use("/familymember", auth, familymember);
 router.use("/healthRisk", healthRisk);

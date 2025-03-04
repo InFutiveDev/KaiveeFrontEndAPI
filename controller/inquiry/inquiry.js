@@ -15,7 +15,7 @@ const addInquiry = async (req, res) => {
   const { logger } = req;
 
   try {
-    const { userId } = req.decoded;
+    // const { userId } = req.decoded;
     const {
       patient_name,
       patient_email,
@@ -29,8 +29,8 @@ const addInquiry = async (req, res) => {
 
     var OtpCode = Math.floor(100000 + Math.random() * 900000);
 
-    const user = await userModel.findOne({ _id: userId });
-    const mobilesms = user.email.mobile;
+    // const user = await userModel.findOne({ _id: userId });
+    // const mobilesms = user.email.mobile;
 
     const saveInquiry = await inquiryModel.create({
       patient_name,
@@ -45,143 +45,143 @@ const addInquiry = async (req, res) => {
 
     const inquiryTime = saveInquiry.createdAt;
 
-    let data = JSON.stringify({
-      project_id: "f9a33498758ee3fa30c6",
-      to: process.env.TOMAIL,
-      cc: "infutivedeveloper@gmail.com",
-      from: process.env.EMAIL,
-      subject: "Website",
-      body: message,
-      user_company_id: "3",
-      user_first_name: patient_name,
-      user_last_name: patient_name,
-      user_email: patient_email,
-      user_phone: mobile_number,
-      user_alt_phone: mobile_number,
-      user_address: "Delhi",
-      user_state: "Delhi",
-      user_city: "Delhi",
-      user_pincode: "110018",
-      data_source: "city Xray",
-    });
+//     let data = JSON.stringify({
+//       project_id: "f9a33498758ee3fa30c6",
+//       to: process.env.TOMAIL,
+//       cc: "infutivedeveloper@gmail.com",
+//       from: process.env.EMAIL,
+//       subject: "Website",
+//       body: message,
+//       user_company_id: "3",
+//       user_first_name: patient_name,
+//       user_last_name: patient_name,
+//       user_email: patient_email,
+//       user_phone: mobile_number,
+//       user_alt_phone: mobile_number,
+//       user_address: "Delhi",
+//       user_state: "Delhi",
+//       user_city: "Delhi",
+//       user_pincode: "110018",
+//       data_source: "city Xray",
+//     });
 
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: "http://crm.cityxrayclinic.com/citycrm/Api/insertlead",
-      headers: {
-        "Content-Type": "application/json",
-        Cookie: "ci_session=9ismm91de9ohchmd9p3g8eio30r12hcs",
-      },
-      data: data,
-    };
+//     let config = {
+//       method: "get",
+//       maxBodyLength: Infinity,
+//       url: "http://crm.cityxrayclinic.com/citycrm/Api/insertlead",
+//       headers: {
+//         "Content-Type": "application/json",
+//         Cookie: "ci_session=9ismm91de9ohchmd9p3g8eio30r12hcs",
+//       },
+//       data: data,
+//     };
 
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+//     axios
+//       .request(config)
+//       .then((response) => {
+//         console.log(JSON.stringify(response.data));
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
 
-    let smsPayload = {
-      message: `Thank you for submitting an enquiry through our website. Our team will review your details and get back to you shortly. For urgent queries, please contact us at 01147252000 or What's app us at 9577727772 . City X-Ray & Scan Clinic.`,
-      mobile: mobilesms,
-    };
-    sendMsg(smsPayload);
+//     let smsPayload = {
+//       message: `Thank you for submitting an enquiry through our website. Our team will review your details and get back to you shortly. For urgent queries, please contact us at 01147252000 or What's app us at 9577727772 . City X-Ray & Scan Clinic.`,
+//       mobile: mobilesms,
+//     };
+//     sendMsg(smsPayload);
 
-    const htmlTemplate = `
-        <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
-    <style>
-      /* General Reset */
-      img {
-        display: block;
-        border: 0;
-        outline: none;
-        text-decoration: none;
-      }
-      table {
-        border-spacing: 0;
-        border-collapse: collapse;
-      }
-    </style>
-  </head>
-  <body>
-    <table style="border: 10px solid #DD861F;" align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="650">
-      <tbody>
-        <tr>
-          <td align="left" valign="top">
-            <table style="border-bottom: 1px solid #cccccc;" border="0" cellpadding="0" cellspacing="0" width="650">
-              <tbody>
-                <tr>
-                  <td style="padding: 10px; background-color: #fcc42c;" align="left" valign="middle" width="275">
-                    <img
-                      alt="CityX-rayClinic"
-                      src="https://www.cityxrayclinic.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FappLogo.e921700e.png&w=750&q=100"
-                      width="100"
-                      height="100"
-                      style="width: 100px; height: 40px; max-width: 100px; max-height: 100px;"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td align="left" valign="top">
-            <table border="0" cellpadding="0" cellspacing="0" width="650">
-              <tbody>
-                <tr>
-                  <td colspan="3" height="30" width="100%">&nbsp;</td>
-                </tr>
-                <tr>
-                  <td width="30">&nbsp;</td>
-                  <td style="font-size: 13px; color: #333333;" width="590">
-                    <p style="font-family: Arial; font-size: 18px; color: #DD861F; margin-bottom: 0.5em; margin-top: 0;"></p>
-                    <p>&nbsp;</p>
-                    <p style="font-size: 13px; font-weight: bold;">
-                      Thanks for Submitting your Enquiry with us. We will get back to you soon.
-                    </p>
-                    <p>Patient Name: ${patient_name}</p>
-                    <p>Patient Email: ${patient_email}</p>
-                    <p>Mobile Number: ${mobile_number}</p>
-                    <p>Message: ${message}</p>
-                    <p>Enquiry From: ${inquiry_from}</p>
-                    <p>Url: ${url}</p>
-                    <p>Enquiry Time: ${inquiryTime}</p>
-                    <p>
-                      For any enquiry call us on
-                      <a href="tel:011-4725-2000" style="color: #DD861F; text-decoration: none;">+91-011-4725-2000</a>
-                    </p>
-                    <div><b>Thank you,</b></div>
-                    <div><b>City X-Ray & Scan Clinic Pvt Ltd</b></div>
-                  </td>
-                  <td width="30">&nbsp;</td>
-                </tr>
-                <tr>
-                  <td colspan="3" height="30" width="100%">&nbsp;</td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </body>
-</html> `;
+//     const htmlTemplate = `
+//         <!DOCTYPE html>
+// <html>
+//   <head>
+//     <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+//     <style>
+//       /* General Reset */
+//       img {
+//         display: block;
+//         border: 0;
+//         outline: none;
+//         text-decoration: none;
+//       }
+//       table {
+//         border-spacing: 0;
+//         border-collapse: collapse;
+//       }
+//     </style>
+//   </head>
+//   <body>
+//     <table style="border: 10px solid #DD861F;" align="center" bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="650">
+//       <tbody>
+//         <tr>
+//           <td align="left" valign="top">
+//             <table style="border-bottom: 1px solid #cccccc;" border="0" cellpadding="0" cellspacing="0" width="650">
+//               <tbody>
+//                 <tr>
+//                   <td style="padding: 10px; background-color: #fcc42c;" align="left" valign="middle" width="275">
+//                     <img
+//                       alt="CityX-rayClinic"
+//                       src="https://www.cityxrayclinic.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FappLogo.e921700e.png&w=750&q=100"
+//                       width="100"
+//                       height="100"
+//                       style="width: 100px; height: 40px; max-width: 100px; max-height: 100px;"
+//                     />
+//                   </td>
+//                 </tr>
+//               </tbody>
+//             </table>
+//           </td>
+//         </tr>
+//         <tr>
+//           <td align="left" valign="top">
+//             <table border="0" cellpadding="0" cellspacing="0" width="650">
+//               <tbody>
+//                 <tr>
+//                   <td colspan="3" height="30" width="100%">&nbsp;</td>
+//                 </tr>
+//                 <tr>
+//                   <td width="30">&nbsp;</td>
+//                   <td style="font-size: 13px; color: #333333;" width="590">
+//                     <p style="font-family: Arial; font-size: 18px; color: #DD861F; margin-bottom: 0.5em; margin-top: 0;"></p>
+//                     <p>&nbsp;</p>
+//                     <p style="font-size: 13px; font-weight: bold;">
+//                       Thanks for Submitting your Enquiry with us. We will get back to you soon.
+//                     </p>
+//                     <p>Patient Name: ${patient_name}</p>
+//                     <p>Patient Email: ${patient_email}</p>
+//                     <p>Mobile Number: ${mobile_number}</p>
+//                     <p>Message: ${message}</p>
+//                     <p>Enquiry From: ${inquiry_from}</p>
+//                     <p>Url: ${url}</p>
+//                     <p>Enquiry Time: ${inquiryTime}</p>
+//                     <p>
+//                       For any enquiry call us on
+//                       <a href="tel:011-4725-2000" style="color: #DD861F; text-decoration: none;">+91-011-4725-2000</a>
+//                     </p>
+//                     <div><b>Thank you,</b></div>
+//                     <div><b>City X-Ray & Scan Clinic Pvt Ltd</b></div>
+//                   </td>
+//                   <td width="30">&nbsp;</td>
+//                 </tr>
+//                 <tr>
+//                   <td colspan="3" height="30" width="100%">&nbsp;</td>
+//                 </tr>
+//               </tbody>
+//             </table>
+//           </td>
+//         </tr>
+//       </tbody>
+//     </table>
+//   </body>
+// </html> `;
 
-    sendEmail({
-      subject: `CXR(Enquiry)-${mobile_number}`,
-      html: htmlTemplate.replace(/{{([^}]+)}}/g, (match, key) => data[key]),
-      to: process.env.TOMAIL,
-      from: process.env.EMAIL,
-      cc: process.env.CC,
-    });
+//     sendEmail({
+//       subject: `CXR(Enquiry)-${mobile_number}`,
+//       html: htmlTemplate.replace(/{{([^}]+)}}/g, (match, key) => data[key]),
+//       to: process.env.TOMAIL,
+//       from: process.env.EMAIL,
+//       cc: process.env.CC,
+//     });
 
     if (!saveInquiry) {
       const obj = {
