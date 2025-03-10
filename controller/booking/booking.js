@@ -350,7 +350,7 @@ const addBooking = async (req, res) => {
         customer_id: saveBooking.userId.toString(),
         customer_email: user.email.id || "infutivedeveloper@gmail.com",
         customer_phone: memberData.phone.toString(),
-        return_url: "https://www.cityxrayclinic.com/booking-payment-status",
+        return_url: "https://kaiveehealthcare.com/",
         description: "Complete your payment",
         first_name: memberData.fullName.toString(),
         last_name: "",
