@@ -204,34 +204,7 @@ const addprescription = async (req, res) => {
   }
 };
 
-// const OtpVerifyAndRegister = async (req, res) => {
-//     const { logger } = req;
-//     try {
-//       const type = req.query.type;
-//       const {  mobile,  otp } = req.body;
 
-//       const verifyOTP = await prescriptionModel.find({ mobile:mobile, otp:otp });
-
-//       if (!verifyOTP) {
-//         const obj = {
-//           res,
-//           status: Constant.STATUS_CODE.BAD_REQUEST,
-//           msg: Constant.ERROR_MSGS.OTP_INVALID,
-//         };
-//         return Response.error(obj);
-//       }
-//       const obj = {
-//         res,
-//         msg: Constant.INFO_MSGS.SUCCESSFUL_LOGIN,
-//         status: Constant.STATUS_CODE.OK,
-//         data: verifyOTP
-//       };
-//       return Response.success(obj);
-//     } catch (error) {
-//       console.log("error--->", error);
-//       return handleException(logger, res, error);
-//     }
-//   };
 
 //getby id
 
@@ -266,6 +239,6 @@ const getById = async (req, res) => {
 
 module.exports = {
   addprescription,
-  // OtpVerifyAndRegister,
+ 
   getById,
 };

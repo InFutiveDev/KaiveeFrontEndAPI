@@ -79,7 +79,7 @@ mongoose.connection.on("disconnected", function () {
 
 // Body-parser
 app.use(cors({ origin: "*" }));
-app.use(bodyParser.urlencoded({ limit: "5mb" }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use("/v1", routes);
 app.get("/", (req, res) => {

@@ -116,48 +116,71 @@ const registerWithEmailAndPassword = async (req, res) => {
 /**
  * Send OTP On Mobile
  */
+const axios = require('axios');
+
 const sendOtp = async (req, res) => {
   const { logger } = req;
   try {
     const { mobile } = req.body;
-    let OtpCode =null
-    if(mobile == 1234567890){
+    let OtpCode = null;
+
+    // Generate OTP (Fixed for a specific number, random otherwise)
+    if (mobile == "1234567890") {
       OtpCode = 999999;
-    }else{
+    } else {
       OtpCode = Math.floor(100000 + Math.random() * 900000);
     }
-    //var OtpCode = 111111;
-    // console.log("OtpCode---->", OtpCode);
 
-     // SMS Send
-    //   let smsPayload = {
-    //     message: `${OtpCode} is the OTP to login to your health account. Please enter the OTP to verify your mobile number. City X-Ray and Scan Clinic`,
-       
-    //     mobile
-    //   };
-    //  sendMsg(smsPayload);
+    // Prepare Interakt API payload
+    let data = JSON.stringify({
+      countryCode: "+91",
+      phoneNumber: mobile,
+      callbackData: "OTP verification request",
+      type: "Template",
+      template: {
+        name: "otp_0u",
+        languageCode: "en",
+        bodyValues: [OtpCode.toString()],
+        buttonValues: {
+          "0": [OtpCode.toString()]
+        }
+      }
+    });
 
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://api.interakt.ai/v1/public/message/',
+      headers: { 
+        'Authorization': 'Basic Q29Ia1FkdGVNeTY5V2E1Q3Y1N1JiOUlJd1RmNHQteDUzZ2I4bTcxQTUwNDo=', 
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    // Send OTP via Interakt
+    await axios.request(config);
+
+    // Save OTP to database
     const saveOtp = await otpModel.create({
       mobile: mobile,
       otp: OtpCode,
     });
-      console.log("saveOtp", saveOtp);
+
+    console.log("saveOtp", saveOtp);
 
     if (!saveOtp) {
-      const obj = {
+      return Response.error({
         res,
         status: Constant.STATUS_CODE.BAD_REQUEST,
         msg: Constant.ERROR_MSGS.CREATE_ERR,
-      };
-      return Response.error(obj);
+      });
     } else {
-      const obj = {
+      return Response.success({
         res,
         msg: Constant.INFO_MSGS.OTP_SENT_SUCCESSFULLY,
         status: Constant.STATUS_CODE.OK,
-        
-      };
-      return Response.success(obj);
+      });
     }
 
   } catch (error) {
