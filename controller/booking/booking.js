@@ -350,7 +350,7 @@ const addBooking = async (req, res) => {
         customer_id: saveBooking.userId.toString(),
         customer_email: user.email.id || "infutivedeveloper@gmail.com",
         customer_phone: memberData.phone.toString(),
-        return_url: "https://kaiveehealthcare.com/",
+        return_url: "https://kaiveehealthcare.com/booking-success?orderId=${saveBooking.id}`,
         description: "Complete your payment",
         first_name: memberData.fullName.toString(),
         last_name: "",
