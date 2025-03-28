@@ -315,70 +315,49 @@ const addBooking = async (req, res) => {
       
   //     from: "vik18nov@gmail.com",
   //   });
-    if (saveBooking.paymentType === "online_hdfc") {
-      // HDFC Payment Gateway Please do not Remove this Code
-      let memberData = await familyModel.findOne({ _id: memberId });
-      let paymentBody = {
-        order_id: saveBooking.id.toString(),
-        amount: saveBooking.paymentAmount.toString(),
-        customer_id: saveBooking.userId.toString(),
-        customer_email: user.email.id || "infutivedeveloper@gmail.com",
-        customer_phone: memberData.phone.toString(),
-        payment_page_client_id: "hdfcmaster",
-        action: "paymentPage",
-        return_url: "https://www.cityxrayclinic.com/booking-payment-status",
-        description: "Complete your payment",
-        first_name: memberData.fullName.toString(),
-        last_name: "",
-      };
-      let paymentLinks = await generatePaymentLink(paymentBody);
-      console.log("Payment Link Create By Direct...", paymentLinks);
-      const obj = {
-        res,
-        status: Constant.STATUS_CODE.OK,
-        msg: "Payment Link Created successfully",
-        data: paymentLinks,
-      };
-      return Response.success(obj);
-    } else if (saveBooking.paymentType === "online") {
-      //Razorpay Payment Gateway Please do not Remove this Code
+  if (saveBooking.paymentType === "online") {
+    let paymentBody = {
+      order_id: saveBooking.id.toString(),
+      amount: saveBooking.paymentAmount.toString(),
+      customer_id: saveBooking.userId.toString(),
+      customer_email: user.email.id || "infutivedeveloper@gmail.com",
+      customer_phone: memberData.phone.toString(),
+      return_url: "https://kaiveehealthcare.com/booking-success",
+      description: "Complete your payment",
+      first_name: memberData.fullName.toString(),
+      last_name: "",
+    };
 
-      let memberData = await familyModel.findOne({ _id: memberId });
-      let paymentBody = {
-        order_id: saveBooking.id.toString(),
-        amount: saveBooking.paymentAmount.toString(),
-        customer_id: saveBooking.userId.toString(),
-        customer_email: user.email.id || "infutivedeveloper@gmail.com",
-        customer_phone: memberData.phone.toString(),
-        return_url: "https://kaiveehealthcare.com/booking-success?orderId=${saveBooking.id}`,
-        description: "Complete your payment",
-        first_name: memberData.fullName.toString(),
-        last_name: "",
-      };
+    try {
       let paymentLinks = await generatePayment(paymentBody);
-
-      console.log("paymentLinks", paymentLinks);
       paymentLinks.order_id = saveBooking.id;
-      const obj = {
+
+      return Response.success({
         res,
         status: Constant.STATUS_CODE.OK,
         msg: "Payment Link Created successfully",
         data: paymentLinks,
-      };
-      return Response.success(obj);
-    } else {
-      const obj = {
+      });
+    } catch (err) {
+      console.error("Razorpay Payment Link Error:", err);
+      return Response.error({
         res,
-        msg: Constant.INFO_MSGS.CREATED_SUCCESSFULLY + " payment pending",
-        status: Constant.STATUS_CODE.OK,
-        data: saveBooking,
-      };
-      return Response.success(obj);
+        status: Constant.STATUS_CODE.INTERNAL_SERVER_ERROR,
+        msg: "Failed to generate payment link",
+      });
     }
-  } catch (error) {
-    console.log("error", error);
-    return handleException(logger, res, error);
+  } else {
+    return Response.success({
+      res,
+      msg: Constant.INFO_MSGS.CREATED_SUCCESSFULLY + " payment pending",
+      status: Constant.STATUS_CODE.OK,
+      data: saveBooking,
+    });
   }
+} catch (error) {
+  console.error("Booking Error:", error);
+  return handleException(logger, res, error);
+}
 };
 
 const checkOrderStatusByOrderIDRazorpay = async (req, res) => {
