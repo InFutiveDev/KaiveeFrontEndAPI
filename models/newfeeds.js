@@ -21,7 +21,11 @@ const feedbackSchema = new Schema({
     message : {
         type:String,
         default:null,
-    }
+    },
+    rating : {
+        type:Number,
+        default:null,
+    },
 },
 {
     timestamps:true,
