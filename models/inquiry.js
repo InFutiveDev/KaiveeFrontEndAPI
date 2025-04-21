@@ -50,7 +50,11 @@ const inquirySchema = new Schema(
     testfield:{
       type:ObjectId,
       default:null,
-    }
+    },
+    appointment_date:{
+      type:String,
+      default:null,
+    },
   },
   {
     timestamps: true,

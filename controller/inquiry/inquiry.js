@@ -24,6 +24,7 @@ const addInquiry = async (req, res) => {
       inquiry_from,
       url,
       testfield,
+      appointment_date,
       //otp,
     } = req.body;
 
@@ -40,6 +41,7 @@ const addInquiry = async (req, res) => {
       inquiry_from,
       url,
       testfield,
+      appointment_date,
       otp: OtpCode,
     });
 
