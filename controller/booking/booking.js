@@ -5,6 +5,7 @@ const bookingModel = require("../../models/booking");
 const couponModel = require("../../models/coupon");
 const testModel = require("../../models/test");
 const userModel = require("../../models/user");
+const technicianModel = require("../../models/technician");
 const labModel = require("../../models/lab");
 
 const familyModel = require("../../models/familyMember");
@@ -21,6 +22,7 @@ const {
   checkOrderStatusRazorpay,
 } = require("../../controller/payment-gateway/razorpay/razorpay");
 const _ = require("underscore");
+const { texttospeech } = require("googleapis/build/src/apis/texttospeech");
 const { ObjectId } = mongoose.Types;
 
 const addBooking = async (req, res) => {
@@ -37,6 +39,7 @@ const addBooking = async (req, res) => {
       collectionType,
       couponId,
       memberId,
+      technicianId,
       paymentType,
       timeslot,
     } = req.body;
@@ -131,6 +134,7 @@ const addBooking = async (req, res) => {
       lab_id: lab_id || null,
       paymentAmount,
       couponId: GetcouponId[0]._id,
+      technicianId,
       collectionType,
       timeslot,
       paymentType,
@@ -491,6 +495,7 @@ const getBookingById = async (req, res) => {
         $project: {
           userId: 1,
           address: 1,
+          technicianId: 1,
           sampleCollectionDateTime: 1,
           testData: "$testId",
           memberData: "$memberData",

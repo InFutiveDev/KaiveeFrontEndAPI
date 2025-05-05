@@ -33,6 +33,7 @@ const landingInquiryRouter = require("./landing_inquiry");
 const corporateRouter = require("./corporate");
 const franchiseRouter = require("./franchise");
 const carrerFormRouter = require("./carrerform");
+const technicianRouter = require("./technician");
 
 const { auth } = require("../middlewares/auth");
 
@@ -72,5 +73,6 @@ router.use("/landingInquiry", landingInquiryRouter);
 router.use("/corporate", corporateRouter);
 router.use("/franchise", franchiseRouter);
 router.use("/carrer-form", carrerFormRouter);
+router.use("/technician", technicianRouter);
 
 module.exports = router;

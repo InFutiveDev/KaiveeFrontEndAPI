@@ -17,6 +17,10 @@ const bookingSchema = new Schema(
       type: ObjectId,
       default: null,
     },
+    technicianId: {
+      type: ObjectId,
+      default: null,
+    },
     sampleCollectionDateTime: {
       type: Date,
       default: null,
