@@ -34,6 +34,7 @@ const corporateRouter = require("./corporate");
 const franchiseRouter = require("./franchise");
 const carrerFormRouter = require("./carrerform");
 const technicianRouter = require("./technician");
+const notificationsRoute = require("./notification");
 
 const { auth } = require("../middlewares/auth");
 
@@ -74,5 +75,6 @@ router.use("/corporate", corporateRouter);
 router.use("/franchise", franchiseRouter);
 router.use("/carrer-form", carrerFormRouter);
 router.use("/technician", technicianRouter);
+router.use("/notification", notificationsRoute);
 
 module.exports = router;
