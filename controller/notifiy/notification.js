@@ -81,11 +81,59 @@ const getEnabledNotifications = async (req, res) => {
     }
   };
   
+  const getNotificationsByUserId = async (req, res) => {
+  const { logger } = req;
+  try {
+    const { userId } = req.params;
+    const { status, category } = req.query;
+
+    if (!userId) {
+      return Response.error({
+        res,
+        status: Constant.STATUS_CODE.BAD_REQUEST,
+        msg: "userId is required in params",
+      });
+    }
+
+    const query = {
+      $or: [
+        { userId: mongoose.Types.ObjectId(userId) },
+        { userId: null }, // global
+      ],
+    };
+
+    // Filter by status if provided
+    if (status === "true" || status === "false") {
+      query.notification_status = status === "true";
+    }
+
+    // Filter by category (single or multiple comma-separated)
+    if (category) {
+      const categoryArray = category.split(',').map(cat => cat.trim());
+      query.notification_category = { $in: categoryArray };
+    }
+
+    const notifications = await notificationModel
+      .find(query)
+      .sort({ createdAt: -1 });
+
+    return Response.success({
+      res,
+      msg: Constant.INFO_MSGS.SUCCESS,
+      status: Constant.STATUS_CODE.OK,
+      data: notifications,
+    });
+  } catch (error) {
+    console.log("Error fetching notifications by userId with filters:", error);
+    return handleException(logger, res, error);
+  }
+};
 
 
 
 module.exports = {
    
     deleteNotification,
-    getEnabledNotifications
+    getEnabledNotifications,
+    getNotificationsByUserId,
     };
