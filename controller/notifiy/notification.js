@@ -131,9 +131,55 @@ const getEnabledNotifications = async (req, res) => {
 
 
 
+const updateNotification = async (req, res) => {
+  const { logger } = req;
+  try {
+    const { categories, status } = req.body;
+
+    // Validate input
+    if (!categories || !Array.isArray(categories) || typeof status !== "boolean") {
+      return Response.error({
+        res,
+        status: Constant.STATUS_CODE.BAD_REQUEST,
+        msg: "categories (array) and status (boolean) are required in the request body",
+      });
+    }
+
+    // Update notifications based on categories
+    const updated = await notificationModel.updateMany(
+      {
+        notification_category: { $in: categories },
+      },
+      {
+        $set: { notification_status: status },
+      }
+    );
+
+    // Check if any documents were modified
+    if (updated.modifiedCount === 0) {
+      return Response.error({
+        res,
+        status: Constant.STATUS_CODE.BAD_REQUEST,
+        msg: "No matching notifications found to update",
+      });
+    }
+
+    return Response.success({
+      res,
+      msg: `Updated ${updated.modifiedCount} category(s) to status ${status}`,
+      status: Constant.STATUS_CODE.OK,
+      data: { modifiedCount: updated.modifiedCount },
+    });
+  } catch (error) {
+    console.log("Error updating notifications:", error);
+    return handleException(logger, res, error);
+  }
+};
+
 module.exports = {
    
     deleteNotification,
     getEnabledNotifications,
     getNotificationsByUserId,
-    };
+    updateNotification,
+};
