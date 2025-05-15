@@ -75,6 +75,6 @@ router.use("/corporate", corporateRouter);
 router.use("/franchise", franchiseRouter);
 router.use("/carrer-form", carrerFormRouter);
 router.use("/technician", technicianRouter);
-router.use("/notification", notificationsRoute);
+router.use("/notification",auth, notificationsRoute);
 
 module.exports = router;
