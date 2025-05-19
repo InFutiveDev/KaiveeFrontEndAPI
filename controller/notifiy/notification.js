@@ -2,6 +2,7 @@ const { handleException } = require("../../helpers/exception");
 const Response = require("../../helpers/response");
 const Constant = require("../../helpers/constant");
 const notificationModel = require("../../models/notifications");
+const notificationCategoryModel = require("../../models/notificationCategory");
 const userModel = require("../../models/user");
 
 
@@ -11,189 +12,196 @@ const { ObjectId } = mongoose.Types;
 
 
   
-
-const deleteNotification = async (req, res) => {
-  const { logger } = req;
+const getUserNotifications = async (req, res, next) => {
   try {
-    const _id = req.params.id;
-    if (!_id) {
-      const obj = {
-        res,
-        status: Constant.STATUS_CODE.BAD_REQUEST,
-        msg: `_id ${Constant.INFO_MSGS.MSG_REQUIRED} in query params `,
-      };
-      return Response.error(obj);
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const startIndex = (page - 1) * limit;
+    const { userId } = req.decoded;
+    const filter = { user: userId };
+    
+    if (req.query.isRead !== undefined) {
+      filter.isRead = req.query.isRead === 'true';
     }
-    let deleteData = await notificationModel.findByIdAndDelete({ _id });
-    if (!deleteData) {
-      const obj = {
-        res,
-        status: Constant.STATUS_CODE.BAD_REQUEST,
-        msg: Constant.ERROR_MSGS.DATA_NOT_FOUND,
-      };
-      return Response.error(obj);
-    } else {
-      const obj = {
-        res,
-        msg: Constant.INFO_MSGS.DELETED_SUCCESSFULLY,
-        status: Constant.STATUS_CODE.OK,
-        data: deleteData,
-        // data: "",
-      };
-      return Response.success(obj);
+    
+    if (req.query.isArchived !== undefined) {
+      filter.isArchived = req.query.isArchived === 'true';
     }
-  } catch (error) {
-    console.log("error", error);
-    return handleException(logger, res, error);
-  }
-};
-
-const getEnabledNotifications = async (req, res) => {
-  const { logger } = req;
-
-  try {
-    const { userId } = req.decoded; // Get userId from the logged-in user's token
-    const { category, status } = req.query;
-
-    if (!userId) {
-      return Response.error({
-        res,
-        status: Constant.STATUS_CODE.BAD_REQUEST,
-        msg: "userId is required in the token",
-      });
+    
+    if (req.query.category) {
+      filter.category = req.query.category;
     }
 
-    const query = {
-      userId: mongoose.Types.ObjectId(userId), // Filter by userId
-    };
+    const total = await notificationModel.countDocuments(filter);
+    
+    const notifications = await notificationModel.find(filter)
+      .populate('category')
+      .sort({ createdAt: -1 })
+      .skip(startIndex)
+      .limit(limit);
 
-    // Handle multiple categories
-    if (category) {
-      const categories = category.split(',').map((c) => c.trim());
-      query.notification_category = { $in: categories };
+    const pagination = {};
+
+    if (startIndex > 0) {
+      pagination.prev = { page: page - 1, limit };
     }
 
-    // Handle status (true/false)
-    if (status === "true" || status === "false") {
-      query.notification_status = status === "true";
+    if (startIndex + notifications.length < total) {
+      pagination.next = { page: page + 1, limit };
     }
 
-    const notifications = await notificationModel
-      .find(query)
-      .sort({ createdAt: -1 });
-
-    return Response.success({
-      res,
-      msg: Constant.INFO_MSGS.SUCCESS,
-      status: Constant.STATUS_CODE.OK,
-      data: notifications,
+    res.status(200).json({
+      success: true,
+      count: notifications.length,
+      pagination,
+      total,
+      data: notifications
     });
-  } catch (error) {
-    console.log("Error fetching notifications:", error);
-    return handleException(logger, res, error);
+  } catch (err) {
+    next(err);
   }
 };
-  
-//   const getNotificationsByUserId = async (req, res) => {
-//   const { logger } = req;
-//   try {
-//     const { userId } = req.params;
-//     const { status, category } = req.query;
 
-//     if (!userId) {
-//       return Response.error({
-//         res,
-//         status: Constant.STATUS_CODE.BAD_REQUEST,
-//         msg: "userId is required in params",
-//       });
-//     }
-
-//     const query = {
-//       $or: [
-//         { userId: mongoose.Types.ObjectId(userId) },
-//         { userId: null }, // global
-//       ],
-//     };
-
-//     // Filter by status if provided
-//     if (status === "true" || status === "false") {
-//       query.notification_status = status === "true";
-//     }
-
-//     // Filter by category (single or multiple comma-separated)
-//     if (category) {
-//       const categoryArray = category.split(',').map(cat => cat.trim());
-//       query.notification_category = { $in: categoryArray };
-//     }
-
-//     const notifications = await notificationModel
-//       .find(query)
-//       .sort({ createdAt: -1 });
-
-//     return Response.success({
-//       res,
-//       msg: Constant.INFO_MSGS.SUCCESS,
-//       status: Constant.STATUS_CODE.OK,
-//       data: notifications,
-//     });
-//   } catch (error) {
-//     console.log("Error fetching notifications by userId with filters:", error);
-//     return handleException(logger, res, error);
-//   }
-// };
-
-
-const updateNotification = async (req, res) => {
-  const { logger } = req;
+// @desc    Get a single notification for current user
+// @route   GET /api/notifications/:id
+// @access  Private
+const getSingleUserNotification = async (req, res, next) => {
+  const { userId } = req.decoded;
   try {
-    const { userId } = req.decoded; // Get userId from the logged-in user's token
-    const { categories, status } = req.body;
+    const notification = await notificationModel.findOne({
+      _id: req.params.id,
+      user: userId
+    }).populate('category');
 
-    // Validate input
-    if (!userId || !categories || !Array.isArray(categories) || typeof status !== "boolean") {
-      return Response.error({
-        res,
-        status: Constant.STATUS_CODE.BAD_REQUEST,
-        msg: "categories (array) and status (boolean) are required in the request body",
-      });
+    if (!notification) {
+      return handleException(null, res, { status: 404, message: "Notification not found" });
     }
 
-    // Update notifications based on userId and categories
-    const updated = await notificationModel.updateMany(
-      {
-        userId: mongoose.Types.ObjectId(userId), // Filter by userId
-        notification_category: { $in: categories },
-      },
-      {
-        $set: { notification_status: status },
-      }
+    res.status(200).json({
+      success: true,
+      data: notification
+    });
+  } catch (err) {
+    return handleException(null, res, err);
+  }
+};
+
+// @desc    Mark notification as read
+// @route   PUT /api/notifications/:id/read
+// @access  Private
+const markAsRead = async (req, res, next) => {
+  try {
+    const notification = await notificationModel.findOneAndUpdate(
+      { _id: req.params.id, user: req.decoded.userId },
+      { isRead: true },
+      { new: true, runValidators: true }
     );
 
-    // Check if any documents were modified
-    if (updated.modifiedCount === 0) {
-      return Response.error({
-        res,
-        status: Constant.STATUS_CODE.BAD_REQUEST,
-        msg: "No matching notifications found to update",
-      });
+    if (!notification) {
+      return handleException(null, res, { status: 404, message: "Notification not found" });
     }
 
-    return Response.success({
-      res,
-      msg: `Updated ${updated.modifiedCount} category(s) for userId ${userId} to status ${status}`,
-      status: Constant.STATUS_CODE.OK,
-      data: { modifiedCount: updated.modifiedCount },
+    res.status(200).json({
+      success: true,
+      data: notification
     });
-  } catch (error) {
-    console.log("Error updating notifications:", error);
-    return handleException(logger, res, error);
+  } catch (err) {
+    return handleException(null, res, err);
   }
 };
+
+// @desc    Mark all notifications as read
+// @route   PUT /api/notifications/read-all
+// @access  Private
+const markAllAsRead = async (req, res, next) => {
+  try {
+    const { userId } = req.decoded;
+    const result = await notificationModel.updateMany(
+      { user: userId, isRead: false },
+      { isRead: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      count: result.nModified,
+      message: `${result.nModified} notifications marked as read`
+    });
+  } catch (err) {
+    return handleException(null, res, err);
+  }
+};
+
+// @desc    Archive notification
+// @route   PUT /api/notifications/:id/archive
+// @access  Private
+const archiveNotification = async (req, res, next) => {
+  try {
+    const { userId } = req.decoded;
+    const notification = await notificationModel.findOneAndUpdate(
+      { _id: req.params.id, user: userId },
+      { isArchived: true },
+      { new: true, runValidators: true }
+    );
+
+     if (!notification) {
+      return handleException(null, res, { status: 404, message: "Notification not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: notification
+    });
+  } catch (err) {
+    return handleException(null, res, err);
+  }
+};
+
+// @desc    Delete user notification
+// @route   DELETE /api/notifications/:id
+// @access  Private
+const deleteUserNotification = async (req, res, next) => {
+  try {
+    const notification = await notificationModel.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user.id
+    });
+
+    if (!notification) {
+      return handleException(null, res, { status: 404, message: "Notification not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {}
+    });
+  } catch (err) {
+    return handleException(null, res, err);
+  }
+};
+
+const getCategories = async (req, res, next) => {
+  try {
+    const categories = await notificationCategoryModel.find().sort('name');
+
+    res.status(200).json({
+      success: true,
+      count: categories.length,
+      data: categories
+    });
+  } catch (err) {
+    return handleException(null, res, err);
+  }
+};
+
 
 module.exports = {
    
-    deleteNotification,
-    getEnabledNotifications,
-    // getNotificationsByUserId,
-    updateNotification,
+  getUserNotifications,
+  getSingleUserNotification,
+  markAsRead,
+  markAllAsRead,
+  archiveNotification,
+  deleteUserNotification,
+  getCategories
+ 
 };
