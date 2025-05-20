@@ -12,9 +12,10 @@ const { ObjectId } = mongoose.Types;
 // @desc    Get all preferences for current user
 // @route   GET /api/preferences
 // @access  Private
-exports.getUserPreferences = async (req, res, next) => {
+const getUserPreferences = async (req, res, next) => {
   try {
-    const preferences = await UserPreference.find({ user: req.user.id })
+    const { userId } = req.decoded;
+    const preferences = await UserPreference.find({ user: userId })
       .populate('category', 'name description color icon');
 
     res.status(200).json({
@@ -83,6 +84,7 @@ exports.updatePreference = async (req, res, next) => {
 // @access  Private
 const toggleCategory = async (req, res, next) => {
   try {
+    const { userId } = req.decoded;
     const categoryId = req.params.categoryId;
     
     // Verify category exists
@@ -93,14 +95,14 @@ const toggleCategory = async (req, res, next) => {
 
     // Find or create preference
     let preference = await UserPreference.findOne({
-      user: req.user.id,
+      user: userId,
       category: categoryId
     });
 
     if (preference) {
       // Toggle existing preference
       preference = await UserPreference.findOneAndUpdate(
-        { user: req.user.id, category: categoryId },
+        { user: userId, category: categoryId },
         { 
           enabled: !preference.enabled,
           updatedAt: Date.now()
@@ -110,7 +112,7 @@ const toggleCategory = async (req, res, next) => {
     } else {
       // Create new preference (disabled by default)
       preference = await UserPreference.create({
-        user: req.user.id,
+        user: userId,
         category: categoryId,
         enabled: false
       });
@@ -228,5 +230,6 @@ exports.resetPreferences = async (req, res, next) => {
 };
 
 module.exports = { 
-toggleCategory
+toggleCategory,
+getUserPreferences,
  }

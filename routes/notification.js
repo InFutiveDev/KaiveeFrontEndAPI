@@ -9,7 +9,8 @@ const {
   toggleCategory
 } = require('../controller/notifiy/prefrence');
 
-notificationsRoute.put('/toggle/:categoryId/toggle', toggleCategory);
+notificationsRoute.put('/toggle/:categoryId', toggleCategory);
+notificationsRoute.get("/getpreferences", getUserPreferences);
 
 notificationsRoute.get("/getnotification", notificationsControllers.getUserNotifications);
 notificationsRoute.get("/getnotification/:id", notificationsControllers.getSingleUserNotification);

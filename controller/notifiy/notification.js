@@ -3,6 +3,7 @@ const Response = require("../../helpers/response");
 const Constant = require("../../helpers/constant");
 const notificationModel = require("../../models/notifications");
 const notificationCategoryModel = require("../../models/notificationCategory");
+const UserPreference = require('../../models/userprefrence');
 const userModel = require("../../models/user");
 
 
@@ -11,7 +12,7 @@ const _ = require("underscore");
 const { ObjectId } = mongoose.Types;
 
 
-  
+  //get all notifications for current user
 const getUserNotifications = async (req, res, next) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
@@ -27,6 +28,7 @@ const getUserNotifications = async (req, res, next) => {
     if (req.query.isArchived !== undefined) {
       filter.isArchived = req.query.isArchived === 'true';
     }
+    
     
     if (req.query.category) {
       filter.category = req.query.category;
@@ -123,8 +125,8 @@ const markAllAsRead = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      count: result.nModified,
-      message: `${result.nModified} notifications marked as read`
+      count: result.modifiedCount,
+      message: `${result.modifiedCount} notifications marked as read`
     });
   } catch (err) {
     return handleException(null, res, err);
@@ -161,9 +163,10 @@ const archiveNotification = async (req, res, next) => {
 // @access  Private
 const deleteUserNotification = async (req, res, next) => {
   try {
+    const { userId } = req.decoded;
     const notification = await notificationModel.findOneAndDelete({
       _id: req.params.id,
-      user: req.user.id
+      user: userId
     });
 
     if (!notification) {
@@ -172,7 +175,7 @@ const deleteUserNotification = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: {}
+      data: notification
     });
   } catch (err) {
     return handleException(null, res, err);
@@ -181,6 +184,7 @@ const deleteUserNotification = async (req, res, next) => {
 
 const getCategories = async (req, res, next) => {
   try {
+    
     const categories = await notificationCategoryModel.find().sort('name');
 
     res.status(200).json({
